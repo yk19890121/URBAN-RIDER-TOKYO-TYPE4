@@ -1,0 +1,14 @@
+{
+  "name": "urban-rider-tokyo-type4",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "import-assets": "powershell -ExecutionPolicy Bypass -File scripts/import-assets.ps1",
+    "build": "node scripts/build.mjs",
+    "verify": "node scripts/verify.mjs",
+    "check": "node --check public/app.js && node --check scripts/build.mjs && node --check scripts/serve.mjs && npm run build && npm run verify",
+    "dev": "node scripts/serve.mjs"
+  }
+}
