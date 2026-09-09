@@ -25,8 +25,9 @@ for (const item of products) {
 for (const collection of collections) {
   assert.ok(products.some((item) => item.brand === collection.slug), `no products for ${collection.slug}`);
   const set = assets[collection.slug];
-  assert.ok(set && set.top.length && set.art.length, `missing art set: ${collection.slug}`);
-  for (const image of [...set.top, ...set.art]) {
+  assert.ok(set && set.top.length && set.hero.length && Array.isArray(set.gallery), `missing top/hero/gallery set: ${collection.slug}`);
+  assert.equal(set.gallery.length > 0, collection.slug !== "brand", `gallery rule mismatch: ${collection.slug}`);
+  for (const image of [...set.top, ...set.hero, ...set.gallery]) {
     assert.ok(fs.existsSync(path.join(root, "public", image)), `missing art image: ${image}`);
   }
 }

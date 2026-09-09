@@ -43,3 +43,9 @@ BLENCI LAB: `L03`, `L15`, `F21`, `F22`, `C02`, `B04`, `I02`, `I09`, `G05`, `G10`
 ## 公開
 
 `main` ブランチへのpushでGitHub Actionsが検証とビルドを行い、GitHub Pagesへ公開します。
+## 2026-09 画像・遷移改修
+
+- `src/assets.json` は `top` / `hero` / `gallery` の3スロット。選定画像は `scripts/remap_assets.py` で元PNGからWebPと640px版へ変換します。
+- コレクションページのギャラリーは横スクロール、非トリミング、ホバー拡大、クリック時ライトボックス。BRANDページにはギャラリーを出力しません。
+- TOPから各ブランドページへは、クリック位置から広がるN07円形リビールで遷移します。`prefers-reduced-motion` では通常遷移です。
+- 画像使用箇所は `node scripts/image_usage.mjs` で `docs/image-usage.md` に生成します。商品99点、価格、SUZURI購入URLは変更しません。

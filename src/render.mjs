@@ -59,7 +59,7 @@ const topOrder = ["animal", "bike", "gakusei", "army", "dokuro", "brand"];
 
 export function renderTop({ collections, assets }) {
   const ordered = topOrder.map((slug) => collections.find((item) => item.slug === slug));
-  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="都市を駆ける、自由な魂へ。URBAN RIDER TOKYOのグラフィックTシャツショップ。"><title>URBAN RIDER TOKYO | GRAPHIC T-SHIRT SHOP</title><link rel="icon" href="favicon.svg"><link rel="stylesheet" href="styles.css"><script src="app.js" defer></script></head>
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="都市を駆ける、自由な魂へ。URBAN RIDER TOKYOのグラフィックTシャツショップ。"><title>URBAN RIDER TOKYO | GRAPHIC T-SHIRT SHOP</title><link rel="icon" href="favicon.svg"><script>(function(){try{var w=JSON.parse(sessionStorage.getItem('urt:wipe')||'null');sessionStorage.removeItem('urt:wipe');if(!w||Date.now()-w.t>2500)return;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var r=document.documentElement;r.style.setProperty('--wx',w.x+'px');r.style.setProperty('--wy',w.y+'px');r.classList.add('wipe-enter');}catch(e){}})();</script><link rel="stylesheet" href="styles.css"><script src="app.js" defer></script></head>
   <body class="top-page"><a class="skip-link" href="#main">本文へ移動</a>
   ${header(collections, "", true)}
   <button class="motion-toggle" type="button" aria-pressed="false">画像切替を停止</button>
@@ -69,7 +69,7 @@ export function renderTop({ collections, assets }) {
       <section class="comic-index" aria-label="6つのコレクション">
         ${ordered.map((item, index) => {
           const images = assets[item.slug].top;
-          return `<a class="collection-panel panel-${index + 1} theme-${item.slug}" href="${item.slug}/" data-crossfade='${escapeHtml(JSON.stringify(images))}' data-cursor="VIEW" aria-label="${escapeHtml(item.name)}を見る">
+          return `<a class="collection-panel panel-${index + 1} theme-${item.slug}" href="${item.slug}/" data-nav-reveal data-crossfade='${escapeHtml(JSON.stringify(images))}' data-cursor="VIEW" aria-label="${escapeHtml(item.name)}を見る">
             <div class="crossfade-media" aria-hidden="true">${images.map((image, imageIndex) => picture(image, "", "", "crossfade-layer", "50% 45%", index < 2 && imageIndex === 0)).join("")}</div>
             <div class="panel-copy"><span class="number-tag">${item.number}</span><h2>${escapeHtml(item.name)}</h2><span class="draw-line" aria-hidden="true"><svg viewBox="0 0 160 12"><path d="M2 8 C42 2, 86 11, 158 4"/></svg></span><p>${escapeHtml(item.tagline)}</p></div>
           </a>`;
@@ -101,10 +101,10 @@ export function renderCollection({ collection, collections, assets, products, fo
   const prefix = "../";
   const items = products.filter((item) => item.brand === collection.slug);
   const focus = focals[collection.slug] || [];
-  const heroImages = [...set.top, ...set.art.slice(0, 1)];
-  const sideImage = set.art[1] || set.art[0];
-  const gallery = set.art.length >= 3 ? set.art.slice(0, 3) : [...set.art, ...set.top].slice(0, 3);
-  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${escapeHtml(collection.concept)}"><title>${escapeHtml(collection.name)} | URBAN RIDER TOKYO</title><link rel="icon" href="${prefix}favicon.svg"><link rel="stylesheet" href="${prefix}styles.css"><script src="${prefix}app.js" defer></script></head>
+  const heroImages = set.hero;
+  const sideImage = set.hero[1] || set.hero[0];
+  const gallery = set.gallery || [];
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${escapeHtml(collection.concept)}"><title>${escapeHtml(collection.name)} | URBAN RIDER TOKYO</title><link rel="icon" href="${prefix}favicon.svg"><script>(function(){try{var w=JSON.parse(sessionStorage.getItem('urt:wipe')||'null');sessionStorage.removeItem('urt:wipe');if(!w||Date.now()-w.t>2500)return;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var r=document.documentElement;r.style.setProperty('--wx',w.x+'px');r.style.setProperty('--wy',w.y+'px');r.classList.add('wipe-enter');}catch(e){}})();</script><link rel="stylesheet" href="${prefix}styles.css"><script src="${prefix}app.js" defer></script></head>
   <body class="collection-page theme-${collection.slug}"><a class="skip-link" href="#main">本文へ移動</a>${header(collections, prefix)}
   <main id="main">
     <section class="brand-hero">
@@ -115,9 +115,9 @@ export function renderCollection({ collection, collections, assets, products, fo
       <button class="hero-side" type="button" data-lightbox="${prefix}${sideImage}" data-lightbox-alt="${escapeHtml(collection.name)}のビジュアル" aria-label="サブビジュアルを拡大">${picture(sideImage, `${collection.name}のアート`, prefix, "", focus[1] || "50% 45%", true)}<span>${escapeHtml(collection.tagline)}</span></button>
     </section>
     <section class="concept" id="story"><div class="concept-side">TOKYO<br>FOR<br>DAYDREAMERS</div><div><p class="script-note">${escapeHtml(collection.english)}</p><h2>${escapeHtml(collection.name)}</h2><i></i><p>${escapeHtml(collection.concept)}</p></div><p class="vertical-copy">日常の、<br>その先へ。</p></section>
-    <section class="gallery" aria-label="${escapeHtml(collection.name)}ギャラリー">
+    ${gallery.length ? `<section class="gallery" aria-label="${escapeHtml(collection.name)}ギャラリー">
       ${gallery.map((image, index) => `<button class="gallery-panel gallery-${index + 1}" type="button" data-lightbox="${prefix}${image}" data-lightbox-alt="${escapeHtml(collection.galleryText[index % collection.galleryText.length])}" aria-label="ギャラリー画像${index + 1}を拡大">${picture(image, collection.galleryText[index % collection.galleryText.length], prefix, "", focus[index] || "50% 45%")}<span>${escapeHtml(index === 2 ? collection.captions[1] : collection.galleryText[index % collection.galleryText.length])}</span></button>`).join("")}
-    </section>
+    </section>` : ""}
     <section class="products" id="products"><div class="product-heading"><h2>T-SHIRT</h2><div><p>あの時の気持ちを、いつでも。</p><label class="product-search">商品を検索<input type="search" placeholder="商品番号を入力" autocomplete="off"></label></div></div><p class="search-result" aria-live="polite"></p><div class="product-grid">${items.map((item, index) => productCard(item, prefix, index)).join("")}</div>${items.length > 6 ? `<button class="load-more" type="button">もっと見る <span aria-hidden="true">＋</span></button>` : ""}</section>
   </main>${footer(collections, prefix)}
   <dialog class="lightbox" aria-label="画像拡大表示"><button type="button" class="lightbox-close" aria-label="閉じる">×</button><img src="" alt=""></dialog>

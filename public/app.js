@@ -117,11 +117,27 @@
   }
 
   function initCollectionExit() {
-    document.querySelectorAll(".collection-panel").forEach((link) => link.addEventListener("click", (event) => {
-      if (reducedMotion.matches || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    let navigating = false;
+    addEventListener("pageshow", () => { navigating = false; });
+    document.documentElement.addEventListener("animationend", (event) => {
+      if (event.animationName === "veil-open") document.documentElement.classList.remove("wipe-enter");
+    });
+    document.querySelectorAll("[data-nav-reveal]").forEach((link) => link.addEventListener("click", (event) => {
+      if (reducedMotion.matches || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
-      link.classList.add("is-leaving");
-      setTimeout(() => { location.href = link.href; }, 240);
+      if (navigating) return;
+      navigating = true;
+      const x = event.clientX || innerWidth / 2;
+      const y = event.clientY || innerHeight / 2;
+      try { sessionStorage.setItem("urt:wipe", JSON.stringify({ x, y, t: Date.now() })); } catch { /* private mode */ }
+      const veil = document.createElement("div");
+      veil.className = "page-veil";
+      document.body.append(veil);
+      const radius = Math.ceil(Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)));
+      veil.animate(
+        [{ clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(${radius}px at ${x}px ${y}px)` }],
+        { duration: 500, easing: "cubic-bezier(.7,0,.2,1)", fill: "forwards" },
+      ).finished.finally(() => location.assign(link.href));
     }));
   }
 

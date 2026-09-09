@@ -5,7 +5,7 @@
     { "id": "L15", "target": "TOP, hero and gallery diagonal panel splits" }
   ],
   "gimmicks": [
-    { "id": "C02", "target": "Collection panels expand into brand destinations" },
+    { "id": "C02", "target": "Gallery and product images expand into the accessible lightbox" },
     { "id": "B04", "target": "TOP panel and collection hero background crossfades" },
     { "id": "I02", "target": "SVG line drawing below TOP collection names" },
     { "id": "I09", "target": "Torn-paper reveal for product imagery" },
@@ -15,10 +15,13 @@
     { "id": "U08", "target": "Context label and shape changes on the custom cursor" },
     { "id": "U09", "target": "Sparse short-lived ink trail on fine pointers" },
     { "id": "U13", "target": "Pointer and touch click shockwave" },
-    { "id": "N07", "target": "Circular-reveal fullscreen collection menu" }
+    { "id": "N07", "target": "Circular fullscreen menu and click-position TOP to brand page reveal" }
   ],
   "fonts": [
     { "id": "F21", "target": "Bebas Neue collection and product section display headings" },
     { "id": "F22", "target": "Anton masthead, labels and product identifiers" }
+  ],
+  "revisions": [
+    { "date": "2026-09-09", "summary": "Replaced TOP, hero and gallery artwork; changed galleries to non-cropped horizontal strips; changed TOP navigation to the N07 circular reveal." }
   ]
 }
