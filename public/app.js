@@ -1,4 +1,5 @@
 (() => {
+  document.documentElement.classList.add("js");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   const timers = new Set();
@@ -98,9 +99,20 @@
       products.forEach((card) => {
         const match = !query || card.textContent.toLowerCase().includes(query);
         card.hidden = !match;
+        if (query && match) card.classList.add("is-revealed");
         if (match) visible += 1;
       });
       if (status) status.textContent = query ? `${visible}件の商品が見つかりました` : "";
+    });
+  }
+
+  function initLoadMore() {
+    const button = document.querySelector(".load-more");
+    if (!button) return;
+    button.addEventListener("click", () => {
+      const next = [...document.querySelectorAll(".product-more:not(.is-revealed)")].slice(0, 12);
+      next.forEach((card) => card.classList.add("is-revealed"));
+      if (!document.querySelector(".product-more:not(.is-revealed)")) button.remove();
     });
   }
 
@@ -170,6 +182,7 @@
   initMenu();
   initLightbox();
   initSearch();
+  initLoadMore();
   initCollectionExit();
   initPointerEffects();
   initClickFeedback();

@@ -84,9 +84,9 @@ export function renderTop({ collections, assets }) {
   </body></html>`;
 }
 
-function productCard(product, prefix) {
+function productCard(product, prefix, index) {
   const label = product.number ? `URT ${product.number}` : product.name;
-  return `<article class="product-card" data-depth-card>
+  return `<article class="product-card${index >= 6 ? " product-more" : ""}" data-depth-card>
     <button class="product-media torn-reveal" type="button" data-lightbox="${prefix}${product.image}" data-lightbox-alt="${escapeHtml(product.name)}を拡大表示" aria-label="${escapeHtml(product.name)}の画像を拡大">
       ${picture(product.image, product.name, prefix, "product-image", "50% 50%")}
     </button>
@@ -118,7 +118,7 @@ export function renderCollection({ collection, collections, assets, products, fo
     <section class="gallery" aria-label="${escapeHtml(collection.name)}ギャラリー">
       ${gallery.map((image, index) => `<button class="gallery-panel gallery-${index + 1}" type="button" data-lightbox="${prefix}${image}" data-lightbox-alt="${escapeHtml(collection.galleryText[index % collection.galleryText.length])}" aria-label="ギャラリー画像${index + 1}を拡大">${picture(image, collection.galleryText[index % collection.galleryText.length], prefix, "", focus[index] || "50% 45%")}<span>${escapeHtml(index === 2 ? collection.captions[1] : collection.galleryText[index % collection.galleryText.length])}</span></button>`).join("")}
     </section>
-    <section class="products" id="products"><div class="product-heading"><h2>T-SHIRT</h2><div><p>あの時の気持ちを、いつでも。</p><label class="product-search">商品を検索<input type="search" placeholder="商品番号を入力" autocomplete="off"></label></div></div><p class="search-result" aria-live="polite"></p><div class="product-grid">${items.map((item) => productCard(item, prefix)).join("")}</div></section>
+    <section class="products" id="products"><div class="product-heading"><h2>T-SHIRT</h2><div><p>あの時の気持ちを、いつでも。</p><label class="product-search">商品を検索<input type="search" placeholder="商品番号を入力" autocomplete="off"></label></div></div><p class="search-result" aria-live="polite"></p><div class="product-grid">${items.map((item, index) => productCard(item, prefix, index)).join("")}</div>${items.length > 6 ? `<button class="load-more" type="button">もっと見る <span aria-hidden="true">＋</span></button>` : ""}</section>
   </main>${footer(collections, prefix)}
   <dialog class="lightbox" aria-label="画像拡大表示"><button type="button" class="lightbox-close" aria-label="閉じる">×</button><img src="" alt=""></dialog>
   <button class="motion-toggle" type="button" aria-pressed="false">画像切替を停止</button><div class="cursor" aria-hidden="true"><span>VIEW</span></div><div class="ink-layer" aria-hidden="true"></div><div class="shock-layer" aria-hidden="true"></div>
