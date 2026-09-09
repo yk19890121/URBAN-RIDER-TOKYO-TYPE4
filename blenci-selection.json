@@ -1,0 +1,24 @@
+{
+  "catalogCommit": "5934e9e40bcea73cc4a77195346c07a112f6f127",
+  "layout": [
+    { "id": "L03", "target": "TOP editorial hierarchy and asymmetric collection storytelling" },
+    { "id": "L15", "target": "TOP, hero and gallery diagonal panel splits" }
+  ],
+  "gimmicks": [
+    { "id": "C02", "target": "Collection panels expand into brand destinations" },
+    { "id": "B04", "target": "TOP panel and collection hero background crossfades" },
+    { "id": "I02", "target": "SVG line drawing below TOP collection names" },
+    { "id": "I09", "target": "Torn-paper reveal for product imagery" },
+    { "id": "G05", "target": "Accessible gallery and product lightbox" },
+    { "id": "G10", "target": "Fine-pointer product proximity lift and image enlargement" },
+    { "id": "C09", "target": "Short jelly wobble feedback on purchase buttons" },
+    { "id": "U08", "target": "Context label and shape changes on the custom cursor" },
+    { "id": "U09", "target": "Sparse short-lived ink trail on fine pointers" },
+    { "id": "U13", "target": "Pointer and touch click shockwave" },
+    { "id": "N07", "target": "Circular-reveal fullscreen collection menu" }
+  ],
+  "fonts": [
+    { "id": "F21", "target": "Bebas Neue collection and product section display headings" },
+    { "id": "F22", "target": "Anton masthead, labels and product identifiers" }
+  ]
+}

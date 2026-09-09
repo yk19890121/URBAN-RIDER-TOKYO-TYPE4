@@ -9,6 +9,8 @@ const readJson = (name) => JSON.parse(fs.readFileSync(path.join(root, "src", nam
 const { collections } = await import("../src/collections.mjs");
 const products = readJson("products.json");
 const assets = readJson("assets.json");
+const app = fs.readFileSync(path.join(root, "public", "app.js"), "utf8");
+const selection = JSON.parse(fs.readFileSync(path.join(root, "blenci-selection.json"), "utf8"));
 
 assert.equal(new Set(collections.map((item) => item.slug)).size, 6, "six unique collections required");
 assert.equal(products.length, 99, "all 99 workbook product rows required");
@@ -29,4 +31,26 @@ for (const collection of collections) {
   }
 }
 
-console.log(`Data verification passed: ${collections.length} collections, ${products.length} products.`);
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+for (const slug of ["", ...collections.map((item) => item.slug)]) {
+  const page = path.join(root, "dist", slug, "index.html");
+  assert.ok(fs.existsSync(page), `missing generated page: ${slug || "TOP"}`);
+  const html = fs.readFileSync(page, "utf8");
+  assert.equal((html.match(/<h1\b/g) || []).length, 1, `one h1 required: ${slug || "TOP"}`);
+  assert.match(html, /class="skip-link"/, `skip link required: ${slug || "TOP"}`);
+  assert.match(html, /styles\.css/, `shared CSS required: ${slug || "TOP"}`);
+  assert.match(html, /app\.js/, `shared JavaScript required: ${slug || "TOP"}`);
+  assert.doesNotMatch(html, /—/, `em dash is prohibited: ${slug || "TOP"}`);
+  if (slug) {
+    for (const product of products.filter((item) => item.brand === slug)) {
+      assert.equal((html.match(new RegExp(escapeRegExp(product.url), "g")) || []).length, 1, `purchase URL count: ${product.id}`);
+    }
+  }
+}
+
+assert.match(app, /prefers-reduced-motion/);
+assert.match(app, /pointer:\s*fine/);
+assert.match(app, /Escape/);
+assert.deepEqual(selection.gimmicks.map((item) => item.id), ["C02", "B04", "I02", "I09", "G05", "G10", "C09", "U08", "U09", "U13", "N07"]);
+
+console.log(`Verification passed: ${collections.length + 1} pages, ${products.length} products.`);
