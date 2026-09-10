@@ -18,6 +18,12 @@ function picture(image, alt, prefix, className = "", position = "50% 50%", eager
   return `<picture><source media="(max-width: 720px)" srcset="${prefix}${small}"><img class="${className}" src="${prefix}${image}" alt="${escapeHtml(alt)}" style="object-position:${position}" width="1200" height="900" ${eager ? "fetchpriority=\"high\"" : "loading=\"lazy\""}></picture>`;
 }
 
+const lookbookNote = "※掲載している着用イメージは、商品画像をもとに制作したイメージビジュアルです。実際の商品を着用して撮影したものではないため、色味・質感・サイズ感などが実物と異なる場合があります。";
+
+function renderLookbook(files, prefix, collection) {
+  return `<section class="lookbook-section" aria-labelledby="lookbook-title"><header class="lookbook-heading"><div><span>LOOK BOOK</span><h2 id="lookbook-title">着用イメージ</h2></div><strong>05</strong><small>SWIPE / SCROLL →</small></header><div class="lookbook-track" tabindex="0" role="group" aria-label="${escapeHtml(collection.name)}の着用イメージ（横スクロール）">${files.map((image, index) => `<button class="lookbook-item" type="button" data-lightbox="${prefix}${image}" data-lightbox-alt="${escapeHtml(collection.name)} 着用イメージ ${index + 1}" data-cursor="VIEW" aria-label="着用イメージ${index + 1}を拡大表示"><picture><source media="(max-width:720px)" srcset="${prefix}${image.replace('.webp', '-640.webp')}"><img src="${prefix}${image}" alt="${escapeHtml(collection.name)} 着用イメージ ${index + 1}" width="941" height="1672" loading="lazy" decoding="async"></picture><span>${String(index + 1).padStart(2, "0")}</span></button>`).join("")}</div><p class="lookbook-note">${lookbookNote}</p></section>`;
+}
+
 function menu(collections, prefix) {
   return `<div class="nav-overlay" id="collection-menu" aria-hidden="true">
     <div class="nav-overlay__inner">
@@ -119,6 +125,7 @@ export function renderCollection({ collection, collections, assets, products, fo
       ${gallery.map((image, index) => `<button class="gallery-panel gallery-${index + 1}" type="button" data-lightbox="${prefix}${image}" data-lightbox-alt="${escapeHtml(collection.galleryText[index % collection.galleryText.length])}" aria-label="ギャラリー画像${index + 1}を拡大">${picture(image, collection.galleryText[index % collection.galleryText.length], prefix, "", focus[index] || "50% 45%")}<span>${escapeHtml(index === 2 ? collection.captions[1] : collection.galleryText[index % collection.galleryText.length])}</span></button>`).join("")}
     </section>` : ""}
     <section class="products" id="products"><div class="product-heading"><h2>T-SHIRT</h2><div><p>あの時の気持ちを、いつでも。</p><label class="product-search">商品を検索<input type="search" placeholder="商品番号を入力" autocomplete="off"></label></div></div><p class="search-result" aria-live="polite"></p><div class="product-grid">${items.map((item, index) => productCard(item, prefix, index)).join("")}</div>${items.length > 6 ? `<button class="load-more" type="button">もっと見る <span aria-hidden="true">＋</span></button>` : ""}</section>
+    ${renderLookbook(assets.lookbook[collection.slug], prefix, collection)}
   </main>${footer(collections, prefix)}
   <dialog class="lightbox" aria-label="画像拡大表示"><button type="button" class="lightbox-close" aria-label="閉じる">×</button><img src="" alt=""></dialog>
   <button class="motion-toggle" type="button" aria-pressed="false">画像切替を停止</button><div class="cursor" aria-hidden="true"><span>VIEW</span></div><div class="ink-layer" aria-hidden="true"></div><div class="shock-layer" aria-hidden="true"></div>
